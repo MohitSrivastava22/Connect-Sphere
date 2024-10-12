@@ -1,0 +1,43 @@
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
+.App {
+  background-image: url(Images/background.png);
+  background-position: center;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+}
+
+.talkTive {
+  width: 35%;
+  height: 75px;
+}
+
+.Detail {
+
+  width: 35%;
+  height: auto;
+  padding-bottom: 4px;
+}
+
+.login {
+  width: 100%;
+  height: auto;
+}
+
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.281);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
