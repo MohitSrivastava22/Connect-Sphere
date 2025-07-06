@@ -41,3 +41,21 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
+
+
+/* .messages {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow-y: auto;
+} */
+
+/* .messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+} */

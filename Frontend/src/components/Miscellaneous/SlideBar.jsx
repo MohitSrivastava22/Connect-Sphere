@@ -150,7 +150,7 @@ function SlideBar() {
               <BellIcon fontSize={28} marginRight={2} />
             </MenuButton>
             <MenuList>
-
+              {!notification.length && "No New Messages"}
               {notification?.length > 0 && notification.map((notifi,idx)=>(
                 // console.log("Notification:", notifi),
                 

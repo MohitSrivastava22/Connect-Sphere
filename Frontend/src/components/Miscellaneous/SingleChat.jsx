@@ -219,7 +219,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                             w="100%"
                             h="100%"
                             borderRadius="lg"
-                            overflowY="hidden"
+                            overflowY="auto"
                             flex="1 1 0%"
                             minHeight={0}>
                             {loading ? (<Spinner
@@ -229,21 +229,23 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                                 alignSelf="center"
                                 margin="auto"
                             />) : (
-                                    <Box className='messages'
-                                        w="100%"
-                                        h="100%"
-                                        bg="#F8F8F8"
-                                        borderRadius="lg"
-                                        overflowY="auto" // or "hidden" if using ScrollableFeed
-                                        p={3}
-                                        display="flex"
-                                        flexDirection="column"
-                                        justifyContent="flex-end"
-                                        flex="1 1 0%"
-                                        minHeight={0}>
-                                        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+                                   
+                                        <Box style={{marginBottom:"auto", flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }} className='messages'
+                                            w="100%"
+                                            h="100%"
+                                            bg="#F8F8F8"
+                                            borderRadius="lg"
+                                            overflowY="auto" // or "hidden" if using ScrollableFeed
+                                            p={3}
+                                            display="flex"
+                                            flexDirection="column"
+                                            justifyContent="flex-end"
+                                            flex="1"
+                                            minHeight={0}>
+                                        <div className="flex flex-col overflow-y-scroll scrollbar-none">
                                             <ScrollableChat message={message} />
                                         </div>
+
                                         </Box>
                             )}
                             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
@@ -276,3 +278,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 }
 
 export default SingleChat
+
+
+
+
