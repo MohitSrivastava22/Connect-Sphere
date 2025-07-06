@@ -8,7 +8,6 @@ import ChatProvider from './Context/ChatProvider.jsx'
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
   <ChakraProvider>
     <BrowserRouter>
       <ChatProvider>
@@ -16,5 +15,4 @@ createRoot(document.getElementById('root')).render(
       </ChatProvider>
     </BrowserRouter>
   </ChakraProvider>
-  </StrictMode>
 )

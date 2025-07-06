@@ -18,11 +18,11 @@ const  ProfileModel=({user,children})=> {
       {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
-        <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
+        <IconButton display={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
       )}
-      <Modal size="lg" isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal size="lg"  isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent h="410px">
           <ModalHeader 
           fontSize="40px"
           fontFamily="Work sans"
@@ -30,13 +30,13 @@ const  ProfileModel=({user,children})=> {
           justifyContent= "center"          
           >{user.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody display="flex" flexDir="column" alignItems="center">
             <Image
             borderRadius="full"
               boxSize='150px'
               src={user.pic}
               alt={user.name}
-              isCentered
+              // isCentered
             />
             <Text fontSize={{base: "28px",md:"30px"}}
             fontFamily="Work san"

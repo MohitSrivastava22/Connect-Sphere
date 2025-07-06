@@ -14,23 +14,44 @@ const history=useHistory();
     }
   }, [history])
   
-  const [formType, setFormType] = useState(null);
+  const [formType, setFormType] = useState('login');
   const handleButtonClick = (type) => {
     setFormType(type);
   };
   return (
-    <div className='homeContainer w-screen h-screen'>
-      <div className='talkTive translate-x-full translate-y-8 bg-slate-200 rounded-md text-black font-bold text-4xl flex justify-center items-center'>Talk-A-Tive</div>
-      <div className='Detail bg-slate-200 translate-x-full translate-y-11 rounded-md '>
-        <div className='flex justify-between pt-4'>
-          <button onClick={() => handleButtonClick('login')} className=' w-96 h-10 rounded-full font-semibold text-2xl ml-5 hover:bg-blue-500'>Login</button>
-          <button onClick={()=>handleButtonClick('signup')} className='w-96 h-10 rounded-full font-semibold text-2xl ml-5 hover:bg-blue-500'>Sign Up</button>
+    <>
+    <div className='homeContainer w-screen h-screen flex flex-col items-center justify-center bg-[url("/path-to-bg.jpg")] bg-cover'>
+      <div className=' justify-center text-4xl md:text-5xl font-bold text-blue-500 mb-6 bg-white/70 px-6 py-3 rounded-xl shadow-lg'>
+        Connect Sphere
+      </div>
+
+        <div className='w-[85%] max-w-xl bg-slate-50 rounded-xl shadow-xl backdrop-blur-md p-6'>
+
+        <div className='flex justify-between mb-6'>
+          <button
+            onClick={() => handleButtonClick('login')}
+            className={`w-1/2 py-2 rounded-l-full text-xl font-semibold transition-all ${formType === 'login' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-blue-100'
+              }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => handleButtonClick('signup')}
+            className={`w-1/2 py-2 rounded-r-full text-xl font-semibold transition-all ${formType === 'signup' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-blue-100'
+              }`}
+          >
+            Sign Up
+          </button>
         </div>
-      {formType === 'login' && <Login />}
-      {formType==='signup'&&<SignUp/>}
+
+        {/* Conditional Rendering */}
+        {formType === 'login' && <Login />}
+        {formType === 'signup' && <SignUp />}
       </div>
     </div>
-  )
+    </>
+  );
+  
 }
 
 export default HomePage

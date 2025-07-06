@@ -3,8 +3,25 @@ const bcrypt = require("bcryptjs");
 
 const userSchema= mongoose.Schema({
     name:{type: "String",required:true},
-    email:{type:"String",required:true,unique:true},
-    password:{type:"String",required:true},
+    email: {
+        type: "String",
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: function (value) {
+                return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+            },
+            message: "Please enter a valid email address",
+        },
+    },
+    password: {
+        type: "String",
+        required: true,
+        minlength: 5,
+        trim: true,
+    },
     pic:{
         type:"String",
         required:true,
@@ -24,6 +41,8 @@ userSchema.methods.matchPassword=async function(enteredPassword){
 userSchema.pre("save",async function(next){
     if(!this.isModified('password')){
         return next();
+        // If the password field has not been changed, skip the middleware and proceed to the next middleware or the save operation using next().
+        // If the password field has been modified, proceed to hash the new password.
     }
     const salt=await bcrypt.genSalt(10);
     this.password=await bcrypt.hash(this.password,salt);

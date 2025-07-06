@@ -9,6 +9,7 @@ import UserBadge from '../userAvatar/UserBadge';
 import { Box } from '@chakra-ui/react';
 
 function GroupChat({children}) {
+    // useDisclosure is a custom React hook provided by Chakra UI to manage the open / close state of components like modals, drawers, tooltips, or popovers.
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [GroupChatName, setGroupChatName] = useState("")
     const [selectedMember, setSelectedMember] = useState([])
@@ -32,7 +33,7 @@ function GroupChat({children}) {
             }
         }
            const { data } = await axios.get(`http://localhost:3000/api/user/search?search=${member}`, config)
-           console.log(data);
+        //    console.log(data);
            setLoading(false)
            setSearchResult(data);
            
@@ -49,7 +50,7 @@ function GroupChat({children}) {
        }
     }
 
-    const handleGroup = (user)=>{
+    const addMemberToGroup = (user)=>{
         if(selectedMember.includes(user._id)){
             toast({
                 title: "User Already Exist",
@@ -74,21 +75,25 @@ function GroupChat({children}) {
                 isClosable: true,
                 position: "top-left",
             });
+            setGroupChatName("");
+            setSelectedMember([]);
             return 
         }
 
         try {
             const config={
                 headers:{
-                   
+                    "Content-type": "application/json",
                     Authorization: `Bearer ${user.token}`,
                 }
             }
             const { data } = await axios.post(`http://localhost:3000/api/chat/createGroupChat`,{
-                name:GroupChatName,
-                members:JSON.stringify(selectedMember.map((s)=>(s._id)))
+                groupName:GroupChatName,
+                participants: selectedMember.map((s) => (s._id))
             }, config)
             setChats([data, ...chats]); 
+            setGroupChatName("");
+            setSelectedMember([]);
             onClose()
         } catch (error) {
             toast({
@@ -119,14 +124,15 @@ function GroupChat({children}) {
                   <ModalBody>
                       <FormControl>
                           <FormLabel>Group Chat Name</FormLabel>
-                          <Input required type='name' value={GroupChatName} onChange={(e)=>setGroupChatName(e.target.value)} />
-                          <FormLabel>Add User to the  Group</FormLabel>
-                          <Input mb={1} type='name' value={search} onChange={(e)=>handleSearch(e.target.value)}/>
+                          {/* value={GroupChatName}: Binds the input field's value to the state variable GroupChatName, */}
+                          <Input required type='text' value={GroupChatName} onChange={(e)=>setGroupChatName(e.target.value)} />
+                          <FormLabel>Add User to the Group</FormLabel>
+                          <Input mb={1} type='text' value={search} onChange={(e)=>handleSearch(e.target.value)}/>
                           
                       </FormControl>
                       {loading?(<ChatLoading/>):(
                           searchResult.map((userr)=>(
-                            <UserListItem key={userr._id} user={userr} handlefunction={()=>handleGroup(userr)}/>
+                              <UserListItem key={userr._id} user={userr} handleFunction={() => addMemberToGroup(userr)}/>
                           ))
                       )}
 

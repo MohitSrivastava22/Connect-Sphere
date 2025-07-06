@@ -1,34 +1,88 @@
-const express=require ('express')
-const userRouter=require('./routes/userRouter')
-const chatRouter=require ('./routes/chatRouter')
-const dotenv= require('dotenv');
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const bcrypt = require("bcryptjs");
+const { Server } = require("socket.io");
 const connectDB = require('./config/db');
-const cors=require('cors')
+const userRouter = require('./routes/userRouter');
+const chatRouter = require('./routes/chatRouter');
+const messageRouter = require('./routes/messageRouter');
+const User = require('./Models/userModel');
+
 dotenv.config();
 connectDB();
-const app=express();
 
+const app = express();
 
-var corsOptions = {
-    origin: 'http://localhost:5173', // No trailing slash
+app.use(cors({
+    origin: 'http://localhost:5173',
     methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
-    credentials: true // Include this if you're dealing with credentials
+    credentials: true
+}));
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send("hello your first server");
+});
+
+app.use('/api/user', userRouter);
+app.use('/api/chat', chatRouter);
+app.use('/api/message', messageRouter);
+
+const createGuestUser = async () => {
+    const existing = await User.findOne({ email: "xyza@gmail.com" });
+    if (!existing) {
+        await User.create({
+            name: "Guest User",
+            email: "xyza@gmail.com",
+            password: "123456789",
+            pic: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+        });
+        console.log("Guest user created");
+    } else {
+        console.log("Guest user already exists");
+    }
 };
 
-app.use(cors(corsOptions)); // This should be before your routes
+const startServer = async () => {
+    await createGuestUser();
+    const port = process.env.PORT || 3000;
+    const server = app.listen(port, () => {
+        console.log(`Server is running at port ${port}`);
+    });
 
-//  app.options('*', cors(corsOptions)); // Allow preflight requests
+    const io = new Server(server, {
+        cors: {
+            origin: 'http://localhost:5173',
+            methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
+            credentials: true
+        }
+    });
 
-app.use(express.json())
+    io.on("connection", (socket) => {
+        console.log("Connected to socket.io");
 
-const port=process.env.PORT || 3000
+        socket.on("setup", (user) => {
+            if (!user || !user.id) return;
+            socket.join(user.id);
+            socket.emit("connected");
+        });
 
-app.get('/',(req,res)=>{
-    res.send("hello your first server")
-})
-app.use('/api/user',userRouter)
-app.use('/api/chat',chatRouter)
+        socket.on("join chat", (room) => socket.join(room));
 
-app.listen(port,()=>{
-    console.log(`Server is running at port ${port}`)
-})
+        socket.on("new message", (newMessageReceived) => {
+            const chat = newMessageReceived.chat;
+            if (!chat || !chat.user) return;
+
+            chat.user.forEach(users => {
+                if (users._id === newMessageReceived.sender._id) return;
+                socket.in(users._id).emit("message received", newMessageReceived);
+            });
+        });
+
+        socket.on("typing", (room) => socket.in(room).emit("typing"));
+        socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+    });
+};
+
+startServer();

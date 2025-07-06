@@ -9,13 +9,17 @@ import ChatLoading from './ChatLoading'
 import axios from 'axios'
 import UserListItem from '../userAvatar/UserListItem'
 import ProfileModel from './ProfileModel'
+import { getSender } from '../../config/getSender'
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+import { use } from 'react'
 
 function SlideBar() {
   const [search, setSearch] = useState("")
   const [searchResult, setSearchResult] = useState([])
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState()
-  const { user, setUser, selectedChat, setSelectedChat,chats,setChats } = ChatState();
+  const { user, setUser, selectedChat, setSelectedChat,chats,setChats,notification, setNotification } = ChatState();
   const history = useHistory();
   const { isOpen, onClose, onOpen } = useDisclosure()
   const toast=useToast();
@@ -34,9 +38,11 @@ function SlideBar() {
           Authorization:`Bearer ${user.token}`
         }
       }
-      const { data } = await axios.post(`/api/chat/`, { userId }, config);
+      console.log("userId being sent:", userId);
+      const { data } = await axios.post(`http://localhost:3000/api/chat`, { userId }, config);
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data)
+      resetInput();
       onClose();
     }catch(error){
       setLoading(false);
@@ -53,8 +59,9 @@ function SlideBar() {
   }
 
 
-  const handleSearch = async () => {
-    if (!search) {
+  const handleSearch = async (query) => {
+
+    if (!query || query.trim() === "") {
       toast({
         title: "Please Search The User",
         status: "warning",
@@ -65,6 +72,7 @@ function SlideBar() {
       return;
     }
     try {
+      setSearch(query);
       setLoading(true);
 
       const config = {
@@ -94,36 +102,28 @@ function SlideBar() {
     }
   };
 
-  // useEffect to log searchResult when it changes
   useEffect(() => {
-    console.log(searchResult);
-  }, [searchResult]);
+    if(!search.trim()){
+      return
+    }
+    handleSearch(search);
+  }, [search])
+  
+
+  // useEffect to log searchResult when it changes
+  // useEffect(() => {
+  //   // console.log(searchResult);
+  // }, [searchResult]);
 
 
-  // const handleSearch = async (searchTerm) => {
-  //   try {
-  //     // Make sure searchTerm is a string before fetching
-  //     const response = await fetch(`http://localhost:3000/api/user/search?search=${encodeURIComponent(searchTerm)}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${user.token}`, // Include token if required
-  //       },
-  //     });
+  useEffect(() => {
+    setNotification(notification.filter((n) => n.chat._id !== selectedChat._id))
+  }, [selectedChat]);
 
-  //     if (!response.ok) {
-  //       throw new Error('Network response was not ok');
-  //     }
-
-  //     const users = await response.json();
-  //     console.log(users); // Check the response data
-  //   } catch (error) {
-  //     console.error('Error fetching users:', error);
-  //   }
-  // };
-
-
-
+  const resetInput = () => {
+    setSearch("");
+    setSearchResult([]);
+  }
 
 
   return (
@@ -138,23 +138,41 @@ function SlideBar() {
           </Button>
         </Tooltip>
         <Text fontSize="4xl">
-          Talk-A-Tive
+          Connect Sphere
         </Text>
-        <div>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Menu>
             <MenuButton>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize={28} marginRight={2} />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList>
+
+              {notification?.length > 0 && notification.map((notifi,idx)=>(
+                // console.log("Notification:", notifi),
+                
+                <MenuItem key={notifi._id + '-' + idx}
+                onClick={()=>{
+                  setSelectedChat(notifi.chat);
+                  setNotification(notification.filter((n)=> n.chat._id!==notifi.chat._id))
+                }}>
+                {
+                notifi?.chat.isGroup ? (`New Message in ${notifi.chat.chatName}`):(getSender(user, notifi.chat.user))}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={4}>
               {user && (
                 <Avatar size="sm" cursor="pointer" name={user.name} src={user.pic} />
               )}
             </MenuButton>
             <MenuList>
-              <ProfileModel user={user}>
+              <ProfileModel user={user}> 
                 <MenuItem>My Profile</MenuItem>
               </ProfileModel>
               <MenuDivider />
@@ -164,20 +182,20 @@ function SlideBar() {
         </div>
       </Box>
 
-      <Drawer size="xs" placement='left' onClose={onClose} isOpen={isOpen}>
-        {/* <DrawerOverlay/> */}
+      <Drawer size="xs" placement='left' onClose={() => { onClose(); resetInput()}} isOpen={isOpen}>
+        <DrawerOverlay/>
         <DrawerContent>
           <DrawerHeader>Search User</DrawerHeader>
           <DrawerBody>
-            <Box d="flex">
+            <Box display="flex">
               <Input w="77%" mr={2} placeholder='Search by name or email'
                 value={search}
-                onChange={(e) => { setSearch(e.target.value) }} />
-              <Button onClick={handleSearch}>Go</Button>
+                onChange={e => setSearch(e.target.value)} />
+              <Button onClick={()=>handleSearch(search)}>Go</Button>
             </Box>
             {loading ? (<ChatLoading />) : (
               searchResult?.map((user)=>(
-                <UserListItem key={user._id} user={user} handlefunction={() => { accessChat(user._id)}}/>
+                <UserListItem key={user._id} user={user} handleFunction={() => { accessChat(user._id)}}/>
               ))
             )}
             {loadingChat && <Spinner ml="auto" d="flex" />}

@@ -40,6 +40,7 @@ const userRegistration = asyncHandler(async (req, res) => {
 const userLogin =asyncHandler(async (req,res)=>{
     const {email,password}=req.body
     const user=await User.findOne({email})
+
     if(!user){
         throw new Error("User not Found")
     }
@@ -61,7 +62,7 @@ const allUser=asyncHandler(async (req,res)=>{
     const keyword=req.query.search?{
         $or:[
             {name:{regex:req.query.search,option:"i"}},
-            {email:{regex:req.query.search,option:"i"}}
+            {email:{$regex:req.query.search,option:"i"}}
         ]
     }:{}
     const user=await User.find(keyword).find({_id:{$ne: req.user._id}})
