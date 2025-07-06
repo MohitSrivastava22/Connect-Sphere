@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ChatState } from '../../Context/ChatProvider'
 import { Box, Stack } from '@chakra-ui/layout'
-import { Button, useToast, Text } from "@chakra-ui/react";
+import { Button, useToast, Text, Avatar } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from './ChatLoading';
 import { getSender } from '../../config/getSender';
@@ -112,8 +112,31 @@ function MyChat({ fetchAgain }) {
                   w="100%"
                   height="90px"
                   borderRadius="lg">
+                  <Box display="flex" alignItems="center" gap={3}>
+                    {!chat.isGroup && loggedUser && chat.user ? (
+                      <>
+                        <Avatar
+                          size="sm"
+                          name={getSender(loggedUser, chat.user)}
+                          src={
+                            chat.user[0]._id === loggedUser._id ? chat.user[1]?.pic : chat.user[0]?.pic
+                          }
+                        />
+                        <Text fontSize={{ base: "20px", md: "23px" }} fontFamily="Work sans">
+                          {getSender(loggedUser, chat.user)}
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Avatar size="sm" name={chat.chatName} src={chat.pic || ""} />
+                        <Text fontSize={{ base: "20px", md: "23px" }} fontFamily="Work sans">
+                          {chat.chatName}
+                        </Text>
+                      </>
+                    )}
+                  </Box>
                   
-                  <Text fontSize={{ base: "20px", md: "23px" }}
+                  {/* <Text fontSize={{ base: "20px", md: "23px" }}
                     fontFamily="Work sans">
                     {
                       // console.log(chat.user),
@@ -121,11 +144,11 @@ function MyChat({ fetchAgain }) {
                       !chat.isGroup && loggedUser && chat.user ? (getSender(loggedUser, chat.user)) : (chat.chatName)
 
                     }
-                  </Text>
+                  </Text> */}
 
                   {
                     chat.latestMessage && (
-                      <Text>
+                      <Text ml={10}>
                         <b>{chat.latestMessage.sender.name}</b>
                         {chat.latestMessage.content.length > 50 ? (chat.latestMessage.content.substring(0, 51) + "...") : (chat.latestMessage.content)}
                       </Text>
