@@ -17,7 +17,7 @@ function GroupChat({children}) {
     const [search , setSearch]=useState("");
     const [searchResult, setSearchResult] = useState([]);
     const toast=useToast();
-    const { user, chats, setChats } = ChatState();
+    const { backendUrl, user, chats, setChats } = ChatState();
 
 
     const handleSearch = async (member)=>{
@@ -32,7 +32,7 @@ function GroupChat({children}) {
                 Authorization : `Bearer ${user.token}`
             }
         }
-           const { data } = await axios.get(`http://localhost:3000/api/user/search?search=${member}`, config)
+           const { data } = await axios.get(`${backendUrl}/api/user/search?search=${member}`, config)
         //    console.log(data);
            setLoading(false)
            setSearchResult(data);
@@ -87,7 +87,7 @@ function GroupChat({children}) {
                     Authorization: `Bearer ${user.token}`,
                 }
             }
-            const { data } = await axios.post(`http://localhost:3000/api/chat/createGroupChat`,{
+            const { data } = await axios.post(`${backendUrl}/api/chat/createGroupChat`,{
                 groupName:GroupChatName,
                 participants: selectedMember.map((s) => (s._id))
             }, config)

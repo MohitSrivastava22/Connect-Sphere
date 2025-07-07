@@ -10,6 +10,9 @@ const ChatProvider=({children})=>{
     const [notification, setNotification] = useState([])
     const history = useHistory();
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem("userInfo"))
          if (userInfo) {
@@ -21,7 +24,7 @@ const ChatProvider=({children})=>{
     
     
     return(
-        <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, notification, setNotification }}>{children}</ChatContext.Provider>
+        <ChatContext.Provider value={{ backendUrl,user, setUser, selectedChat, setSelectedChat, chats, setChats, notification, setNotification }}>{children}</ChatContext.Provider>
     )
 }
 export const ChatState=()=>{

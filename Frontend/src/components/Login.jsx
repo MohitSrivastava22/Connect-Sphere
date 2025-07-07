@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState(null);
   const toast = useToast();
   const history = useHistory();
-  const { setUser } = ChatState();
+  const { backendUrl, setUser } = ChatState();
 
   const loginUser = async (loginEmail, loginPassword) => {
     if (!loginEmail || !loginPassword) {
@@ -29,7 +29,7 @@ function Login() {
         headers: { "Content-Type": "application/json" },
       };
       const { data } = await axios.post(
-        'http://localhost:3000/api/user/login',
+        `${backendUrl}/api/user/login`,
         { email: loginEmail, password: loginPassword },
         config
       );

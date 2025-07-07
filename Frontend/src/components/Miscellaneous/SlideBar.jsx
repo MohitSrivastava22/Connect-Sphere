@@ -19,7 +19,7 @@ function SlideBar() {
   const [searchResult, setSearchResult] = useState([])
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState()
-  const { user, setUser, selectedChat, setSelectedChat,chats,setChats,notification, setNotification } = ChatState();
+  const { backendUrl, user, setUser, selectedChat, setSelectedChat,chats,setChats,notification, setNotification } = ChatState();
   const history = useHistory();
   const { isOpen, onClose, onOpen } = useDisclosure()
   const toast=useToast();
@@ -39,7 +39,7 @@ function SlideBar() {
         }
       }
       console.log("userId being sent:", userId);
-      const { data } = await axios.post(`http://localhost:3000/api/chat`, { userId }, config);
+      const { data } = await axios.post(`${backendUrl}/api/chat`, { userId }, config);
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data)
       resetInput();
@@ -81,7 +81,7 @@ function SlideBar() {
         }
       };
 
-      const { data } = await axios.get(`http://localhost:3000/api/user/search?search=${search}`, config);
+      const { data } = await axios.get(`${backendUrl}/api/user/search?search=${search}`, config);
 
       if (Array.isArray(data)) {
         setSearchResult(data);

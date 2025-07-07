@@ -13,7 +13,7 @@ import axios from 'axios';
 
 
 function MyChat({ fetchAgain }) {
-  const { user,chats, setChats, selectedChat, setSelectedChat } = ChatState()
+  const { backendUrl, user,chats, setChats, selectedChat, setSelectedChat } = ChatState()
   const [loggedUser, setLoggedUser] = useState()
   const toast = useToast();
 
@@ -24,7 +24,7 @@ function MyChat({ fetchAgain }) {
           Authorization: `Bearer ${loggedUser.token}`
         }
       }
-      const { data } = await axios.get(`http://localhost:3000/api/chat/`, config)
+      const { data } = await axios.get(`${backendUrl}/api/chat/`, config)
       // console.log(data);
       setChats(data);
       // console.log("chats ", chats)

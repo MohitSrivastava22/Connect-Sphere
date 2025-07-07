@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { user, selectedChat, setSelectedChat } = ChatState();
+    const { backendUrl,user, selectedChat, setSelectedChat } = ChatState();
     const [groupName, setGroupName] = useState("");
     const [search, setSearch] = useState();
     const [searchResult, setSearchResult] = useState([]);
@@ -37,7 +37,7 @@ function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:3000/api/chat/removeFromGroup`, {
+            const { data } = await axios.put(`${backendUrl}/api/chat/removeFromGroup`, {
                 groupId: selectedChat._id,
                 userId: removeUser._id,
             }, config);
@@ -79,7 +79,7 @@ function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:3000/api/chat/removeFromGroup`, {
+            const { data } = await axios.put(`${backendUrl}/api/chat/removeFromGroup`, {
                 groupId: selectedChat._id,
                 userId: removeUser.id,
             }, config);
@@ -111,7 +111,7 @@ function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:3000/api/user/search?search=${query}`, config);
+            const { data } = await axios.get(`${backendUrl}/api/user/search?search=${query}`, config);
             setSearchResult(data);
             setLoading(false);
         } catch (error) {
@@ -135,7 +135,7 @@ function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:3000/api/chat/renameGroup`, {
+            const { data } = await axios.put(`${backendUrl}/api/chat/renameGroup`, {
                 rename: groupName,
                 groupId: selectedChat._id,
             }, config);
@@ -198,7 +198,7 @@ function UpdateGroupChatModel({ fetchAgain, setFetchAgain, fetchMessage }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:3000/api/chat/addToGroup`, {
+            const { data } = await axios.put(`${backendUrl}/api/chat/addToGroup`, {
                 groupId: selectedChat._id,
                 userId: member._id,
             }, config);

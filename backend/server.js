@@ -8,6 +8,7 @@ const userRouter = require('./routes/userRouter');
 const chatRouter = require('./routes/chatRouter');
 const messageRouter = require('./routes/messageRouter');
 const User = require('./Models/userModel');
+const path = require('path');
 
 dotenv.config();
 connectDB();
@@ -103,3 +104,4 @@ const startServer = async () => {
 };
 
 startServer();
+//Done

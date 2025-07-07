@@ -85,7 +85,7 @@ const ProfileModel = ({ user, children }) => {
   const [email, setEmail] = useState(user?.email || "");
   const [pic, setPic] = useState(user?.pic || "");
   const toast = useToast();
-  const {setUser } = ChatState();
+  const {backendUrl,setUser } = ChatState();
 
   const handleUpdate = async () => {
     if (!name || !email || !pic) {
@@ -110,7 +110,7 @@ const ProfileModel = ({ user, children }) => {
       
 
       const { data } = await axios.put(
-        "http://localhost:3000/api/user/profile", // Adjust route if needed
+        `${backendUrl}/api/user/profile`, // Adjust route if needed
         { name, email, pic },
         config
       );

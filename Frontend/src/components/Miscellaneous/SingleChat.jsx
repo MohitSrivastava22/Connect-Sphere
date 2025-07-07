@@ -13,13 +13,13 @@ import axios from 'axios';
 import ScrollableChat from './ScrollableChat';
 import io from 'socket.io-client';
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = import.meta.env.VITE_BACKEND_URL;
 var selectedChatCompare;    
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
     const socket = useRef();
 
-    const { user, selectedChat, setSelectedChat, notification,setNotification } = ChatState()
+    const { backendUrl, user, selectedChat, setSelectedChat, notification,setNotification } = ChatState()
     const toast = useToast();
     const [message, setMessage] = useState([])
     const [loading, setLoading] = useState(false)
@@ -53,7 +53,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
                 setNewMessage("");
 
-                const { data } = await axios.post(`http://localhost:3000/api/message`, {
+                const { data } = await axios.post(`${backendUrl}/api/message`, {
                     content: newMessage,
                     chatId: selectedChat._id,
                 }, config);
@@ -156,7 +156,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 }
             }
             setLoading(true)
-            const { data } = await axios.get(`http://localhost:3000/api/message/${selectedChat._id}`, config)
+            const { data } = await axios.get(`${backendUrl}/api/message/${selectedChat._id}`, config)
             
             // console.log(data)
             setMessage(data);
