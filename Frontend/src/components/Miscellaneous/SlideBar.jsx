@@ -10,8 +10,8 @@ import axios from 'axios'
 import UserListItem from '../userAvatar/UserListItem'
 import ProfileModel from './ProfileModel'
 import { getSender } from '../../config/getSender'
-import NotificationBadge from "react-notification-badge";
-import { Effect } from "react-notification-badge";
+// import NotificationBadge from "react-notification-badge";
+// import { Effect } from "react-notification-badge";
 import { use } from 'react'
 
 function SlideBar() {
@@ -143,11 +143,11 @@ function SlideBar() {
         <div style={{ display: "flex", alignItems: "center" }}>
           <Menu>
             <MenuButton>
-              <NotificationBadge
+              {/* <NotificationBadge
                 count={notification.length}
                 effect={Effect.SCALE}
               />
-              <BellIcon fontSize={28} marginRight={2} />
+              <BellIcon fontSize={28} marginRight={2} /> */}
             </MenuButton>
             <MenuList>
               {!notification.length && "No New Messages"}
