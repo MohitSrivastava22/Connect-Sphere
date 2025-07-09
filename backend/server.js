@@ -16,7 +16,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://connect-sphere-chi.vercel.app'],
+    origin: ['http://localhost:5173', 'https://connect-sphere-chi.vercel.app','connect-sphere-j0ll3ptau-mohit-srivastavas-projects-00cc7aa4.vercel.app'],
     methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
     credentials: true
 }));
@@ -71,7 +71,7 @@ const startServer = async () => {
 
     const io = new Server(server, {
         cors: {
-            origin: ['http://localhost:5173', 'https://connect-sphere-chi.vercel.app'],
+            origin: ['http://localhost:5173', 'https://connect-sphere-chi.vercel.app', 'connect-sphere-j0ll3ptau-mohit-srivastavas-projects-00cc7aa4.vercel.app'],
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
             credentials: true
         }
