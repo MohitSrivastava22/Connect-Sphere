@@ -20,7 +20,7 @@ const history=useHistory();
   };
   return (
     <>
-    <div className='homeContainer w-screen h-screen flex flex-col items-center justify-center bg-[url("/path-to-bg.jpg")] bg-cover'>
+    <div className='homeContainer w-screen h-screen flex flex-col items-center justify-center'>
       <div className=' justify-center text-4xl md:text-5xl font-bold text-blue-500 mb-6 bg-white/70 px-6 py-3 rounded-xl shadow-lg'>
         Connect Sphere
       </div>
