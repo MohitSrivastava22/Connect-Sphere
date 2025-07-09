@@ -187,7 +187,7 @@ const ProfileModel = ({ user, children }) => {
         <IconButton display={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
       )}
 
-      <Modal size="lg" isOpen={isOpen} onClose={() => { onClose(); setEditMode(false); }}>
+      <Modal motionPreset="scale" size="lg" isOpen={isOpen} onClose={() => { onClose(); setEditMode(false); }}>
         <ModalOverlay />
         <ModalContent h={editMode ? "auto" : "410px"}>
           <ModalHeader fontSize="40px" fontFamily="Work sans" textAlign="center">
