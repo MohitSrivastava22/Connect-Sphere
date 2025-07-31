@@ -5,12 +5,14 @@ import { useToast } from '@chakra-ui/react'
 import { useHistory } from "react-router";
 import { ChatState } from '../Context/ChatProvider';
 
+
 function Login() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const toast = useToast();
   const history = useHistory();
   const { backendUrl, setUser } = ChatState();
+  const [loading, setLoading] = useState(false);
 
   const loginUser = async (loginEmail, loginPassword) => {
     if (!loginEmail || !loginPassword) {
@@ -25,6 +27,7 @@ function Login() {
     }
 
     try {
+      setLoading(true);
       const config = {
         headers: { "Content-Type": "application/json" },
       };
@@ -53,7 +56,10 @@ function Login() {
         isClosable: true,
         position: "bottom",
       });
+    }finally {
+      setLoading(false);
     }
+
   };
 
   const handleSubmit = (e) => {
@@ -74,8 +80,13 @@ function Login() {
         <input onChange={(e) => setPassword(e.target.value)} className='w-full h-10 mt-2 px-3 py-2 rounded-md bg-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-lg' id='password' type="password" required placeholder='Enter your password'/>
         <div className='flex flex-col mt-7'>
           <button className='bg-blue-500 w-full h-10 text-xl rounded-md'>Login</button>
-          <button type='button' onClick={handleGuestLogin} className='bg-red-500 w-full h-10 text-xl mt-4 rounded-md'>
-            Explore as Guest
+          <button
+            type='button'
+            onClick={handleGuestLogin}
+            className='bg-red-500 w-full h-10 text-xl mt-4 rounded-md'
+            disabled={loading} // Disable while loading
+          >
+            {loading ? "Loading..." : "Explore as Guest"}
           </button>
         </div>
       </form>
